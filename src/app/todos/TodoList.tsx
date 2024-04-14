@@ -1,9 +1,8 @@
 import { getTodos } from '@/app/db';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import EditTodo from './EditTodo';
-import { SubmitButton } from '@/components/submit-button';
 import DeleteForm from './DeleteForm';
+import ChangeStatus from './ChangeStatus';
 
 export default async function TodoList() {
   let todos = await getTodos();
@@ -27,7 +26,7 @@ export default async function TodoList() {
           </CardHeader>
           <CardFooter>
             <EditTodo todo={todo} />
-            <SubmitButton name='Change status' variant='default' className='ml-2' />
+            <ChangeStatus todo={todo} />
             <DeleteForm todo={todo} />
           </CardFooter>
         </Card>

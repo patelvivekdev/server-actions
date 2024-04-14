@@ -133,14 +133,16 @@ export async function deleteTodo(id: number) {
 
 // =============================== changeStatus ===============================
 
-export async function changeStatus(id: number, isCompleted: string) {
+export async function changeStatus(id: number, isCompleted: boolean) {
   let status = false;
-  if (isCompleted === 'on') {
+  if (isCompleted === false) {
     status = true;
+  } else {
+    status = false;
   }
 
   try {
-    const { data, error } = await supabase.from('todos').update({ isCompleted: status }).eq('id', id).select();
+    const { error } = await supabase.from('todos').update({ isCompleted: status }).eq('id', id).select();
 
     if (error) {
       console.log('Error', error);

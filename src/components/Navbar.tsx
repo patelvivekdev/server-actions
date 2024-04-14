@@ -17,7 +17,7 @@ export default function Navbar() {
                 Todos
               </Link>
             </Button>
-            <Button size='sm'>Sign up</Button>
+            <Button size='sm'>Profile</Button>
           </nav>
         </div>
       </div>

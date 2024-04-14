@@ -4,17 +4,17 @@ import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 
 import { SubmitButton } from '@/components/submit-button';
-
-import { deleteTodo } from '@/app/actions';
+import { changeStatus } from '@/app/actions';
 
 const initialState = {
   message: '',
   errors: null,
 };
 
-export default function DeleteForm({ todo }: { todo: any }) {
-  let deleteTodoWithId = deleteTodo.bind(null, todo.id);
-  const [state, formAction] = useFormState<any>(deleteTodoWithId as any, initialState);
+export default function ChangeStatus({ todo }: { todo: any }) {
+  let changeStatusWithId = changeStatus.bind(null, todo?.id);
+  changeStatusWithId = changeStatusWithId.bind(null, todo?.isCompleted);
+  const [state, formAction] = useFormState<any>(changeStatusWithId as any, initialState);
 
   useEffect(() => {
     if (state.type === 'success') {
@@ -28,7 +28,7 @@ export default function DeleteForm({ todo }: { todo: any }) {
 
   return (
     <form action={formAction}>
-      <SubmitButton name='Delete' variant='destructive' className='ml-2' />
+      <SubmitButton name='Change status' variant='default' className='ml-2' />
     </form>
   );
 }
