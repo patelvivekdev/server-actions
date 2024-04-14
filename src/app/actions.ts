@@ -31,7 +31,7 @@ export async function addTodo(prevState: any, formData: FormData) {
       console.log('Error', error);
       return {
         type: 'error',
-        message: 'Database Error: Failed to send message.',
+        message: 'Database Error: Failed to add todo.',
       };
     }
     revalidatePath('/todos');
@@ -44,7 +44,7 @@ export async function addTodo(prevState: any, formData: FormData) {
     console.log('Error', error.message);
     return {
       type: 'error',
-      message: 'Database Error: Failed to send message.',
+      message: 'Database Error: Failed to add todo.',
     };
   }
 }
@@ -70,31 +70,96 @@ export async function editTodo(id: number, prevState: any, formData: FormData) {
     return {
       type: 'error',
       errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to add todo.',
+      message: 'Missing Fields. Failed to edit todo.',
     };
   }
 
   try {
-    const { data, error } = await supabase.from('todos').update({ title: 'otherValue' }).eq('some_column', 'someValue').select();
+    const { data, error } = await supabase
+      .from('todos')
+      .update({ title: validatedFields.data.title, isCompleted: status })
+      .eq('id', id)
+      .select();
 
-    // if (error) {
-    //   console.log('Error', error);
-    //   return {
-    //     type: 'error',
-    //     message: 'Database Error: Failed to send message.',
-    //   };
-    // }
+    if (error) {
+      console.log('Error', error);
+      return {
+        type: 'error',
+        message: 'Database Error: Failed to edit todo.',
+      };
+    }
     revalidatePath('/todos');
     return {
       type: 'success',
-      message: `${validatedFields.data.title} added successfully.`,
+      message: `${validatedFields.data.title} updated successfully.`,
       resetKey: Date.now().toString(),
     };
   } catch (error: any) {
     console.log('Error', error.message);
     return {
       type: 'error',
-      message: 'Database Error: Failed to send message.',
+      message: 'Database Error: Failed to edit todo.',
+    };
+  }
+}
+
+// =============================== deleteTodo ===============================
+
+export async function deleteTodo(id: number) {
+  try {
+    const { error } = await supabase.from('todos').delete().eq('id', id);
+
+    if (error) {
+      console.log('Error', error);
+      return {
+        type: 'error',
+        message: 'Database Error: Failed to delete todo.',
+      };
+    }
+    revalidatePath('/todos');
+    return {
+      type: 'success',
+      message: `Todo deleted successfully.`,
+      resetKey: Date.now().toString(),
+    };
+  } catch (error: any) {
+    console.log('Error', error.message);
+    return {
+      type: 'error',
+      message: 'Database Error: Failed to delete todo.',
+    };
+  }
+}
+
+// =============================== changeStatus ===============================
+
+export async function changeStatus(id: number, isCompleted: string) {
+  let status = false;
+  if (isCompleted === 'on') {
+    status = true;
+  }
+
+  try {
+    const { data, error } = await supabase.from('todos').update({ isCompleted: status }).eq('id', id).select();
+
+    if (error) {
+      console.log('Error', error);
+      return {
+        type: 'error',
+        message: 'Database Error: Failed to delete todo.',
+      };
+    }
+    revalidatePath('/todos');
+    return {
+      type: 'success',
+      message: `Change status successfully.`,
+      resetKey: Date.now().toString(),
+    };
+  } catch (error: any) {
+    console.log('Error', error.message);
+    return {
+      type: 'error',
+      message: 'Database Error: Failed to delete todo.',
     };
   }
 }

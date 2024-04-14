@@ -6,10 +6,8 @@ import { useFormState } from 'react-dom';
 import { SubmitButton } from '@/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { editTodo } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-
 import {
   Dialog,
   DialogContent,
@@ -19,6 +17,8 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
+
+import { editTodo } from '@/app/actions';
 
 const initialState = {
   message: '',
