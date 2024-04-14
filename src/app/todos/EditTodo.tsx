@@ -46,7 +46,7 @@ export default function EditTodo({ todo }: { todo: any }) {
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>Edit Todo</DialogTitle>
-          <DialogDescription>Make changes to your todo here. Click save when you're done.</DialogDescription>
+          <DialogDescription>Make changes to your todo here. Click save when you are done.</DialogDescription>
         </DialogHeader>
         <form action={formAction} key={state?.resetKey}>
           <div className='grid gap-4 py-4'>
