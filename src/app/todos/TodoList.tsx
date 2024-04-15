@@ -3,9 +3,10 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/comp
 import EditTodo from './EditTodo';
 import DeleteForm from './DeleteForm';
 import ChangeStatus from './ChangeStatus';
+import { User } from 'next-auth';
 
-export default async function TodoList() {
-  let todos = await getTodos();
+export default async function TodoList({ user }: { user: User }) {
+  let todos = await getTodos(user);
 
   // sort todos with id
   if (todos != null) {

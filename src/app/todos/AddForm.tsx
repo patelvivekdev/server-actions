@@ -7,17 +7,23 @@ import { SubmitButton } from '@/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { addTodo } from '@/app/actions';
+import { User } from 'next-auth';
 
 const initialState = {
   message: '',
   errors: null,
 };
 
-export default function AddTodo() {
-  const [state, formAction] = useFormState<any>(addTodo as any, initialState);
+export default function AddTodo({ user }: { user: User }) {
+  const addTodoWithEmail = addTodo.bind(null, user?.email as string);
+
+  const [state, formAction] = useFormState<any>(addTodoWithEmail as any, initialState);
 
   useEffect(() => {
     if (state.type === 'success') {
+      toast.success(state.message);
+    }
+    if (state.type === 'redirect') {
       toast.success(state.message);
     }
   }, [state]);

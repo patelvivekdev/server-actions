@@ -10,7 +10,7 @@ const addTodoSchema = z.object({
   title: z.string().min(3, { message: 'Must be 3 or more characters long' }),
 });
 
-export async function addTodo(prevState: any, formData: FormData) {
+export async function addTodo(email: string, prevState: any, formData: FormData) {
   const validatedFields = addTodoSchema.safeParse({
     title: formData.get('title'),
   });
@@ -24,9 +24,18 @@ export async function addTodo(prevState: any, formData: FormData) {
     };
   }
 
+  // if not email user is not authenticated
+  if (!email) {
+    return {
+      type: 'redirect',
+      message: 'Please Login again!.',
+    };
+  }
+
   try {
     const { data, error } = await supabase.from('todos').upsert({
       title: validatedFields.data.title,
+      email: email,
     });
 
     if (error) {
