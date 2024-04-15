@@ -9,8 +9,7 @@ export function SignIn({ provider, ...props }: { provider?: string } & React.Com
         await signIn(provider);
       }}
     >
-      <Button {...props}>Sign in with GitHub</Button>
-      {/* <Button onClick={() => signIn('github')}></Button> */}
+      <Button {...props}>Sign In</Button>
     </form>
   );
 }
