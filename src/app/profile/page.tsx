@@ -1,23 +1,20 @@
-import { redirect } from 'next/navigation';
-
-import { createClient } from '@/lib/supabase/server';
-import { signOut } from '../actions';
-import { Button } from '@/components/ui/button';
+import { auth } from '@/app/auth';
+import { SignIn, SignOut } from '@/components/auth-components';
 
 export default async function PrivatePage() {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    redirect('/login');
-  }
+  const session = await auth();
+  if (!session?.user)
+    return (
+      <div className='flex h-screen w-4/5 mx-auto flex-col items-center gap-10 justify-center'>
+        <h1 className='text-3xl'>You need to login to perfom this action.</h1>
+        <SignIn />
+      </div>
+    );
 
   return (
     <div className='mt-20 flex flex-col h-screen justify-center items-center'>
-      <p>Hello {data.user.email}</p>
-      <form action={signOut}>
-        <Button variant="outline">Logout</Button>
-      </form>
+      <p>Hello {session.user.email}</p>
+      <SignOut className='' />
     </div>
   );
 }

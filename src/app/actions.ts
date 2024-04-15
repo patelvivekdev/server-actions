@@ -1,7 +1,6 @@
 'use server';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import supabase from '@/lib/supabase/private';
-import { createClient } from '@/lib/supabase/server';
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -169,123 +168,123 @@ export async function changeStatus(id: number, isCompleted: boolean) {
   }
 }
 
-// =============================== Register ===============================
-const registerSchema = z.object({
-  email: z.string().email('Please enter valid message').min(5),
-  password: z.string().min(8, { message: 'Must be 8 or more characters long' }),
-});
+// // =============================== Register ===============================
+// const registerSchema = z.object({
+//   email: z.string().email('Please enter valid message').min(5),
+//   password: z.string().min(8, { message: 'Must be 8 or more characters long' }),
+// });
 
-export async function register(prevState: any, formData: FormData) {
-  const validatedFields = registerSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  });
+// export async function register(prevState: any, formData: FormData) {
+//   const validatedFields = registerSchema.safeParse({
+//     email: formData.get('email'),
+//     password: formData.get('password'),
+//   });
 
-  // Return early if the form data is invalid
-  if (!validatedFields.success) {
-    return {
-      type: 'error',
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to register.',
-    };
-  }
+//   // Return early if the form data is invalid
+//   if (!validatedFields.success) {
+//     return {
+//       type: 'error',
+//       errors: validatedFields.error.flatten().fieldErrors,
+//       message: 'Missing Fields. Failed to register.',
+//     };
+//   }
 
-  try {
-    let { data, error } = await supabase.auth.signUp({
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-    });
+//   try {
+//     let { data, error } = await supabase.auth.signUp({
+//       email: validatedFields.data.email,
+//       password: validatedFields.data.password,
+//     });
 
-    if (error) {
-      console.log('Error', error);
-      return {
-        type: 'error',
-        message: 'Database Error: Failed to register.',
-      };
-    }
-    return {
-      data: data,
-      type: 'success',
-      message: 'Registration successful.',
-    };
-  } catch (error: any) {
-    console.log('Error', error.message);
-    return {
-      type: 'error',
-      message: 'Database Error: Failed to register.',
-    };
-  }
-}
+//     if (error) {
+//       console.log('Error', error);
+//       return {
+//         type: 'error',
+//         message: 'Database Error: Failed to register.',
+//       };
+//     }
+//     return {
+//       data: data,
+//       type: 'success',
+//       message: 'Registration successful.',
+//     };
+//   } catch (error: any) {
+//     console.log('Error', error.message);
+//     return {
+//       type: 'error',
+//       message: 'Database Error: Failed to register.',
+//     };
+//   }
+// }
 
-// =============================== Login ===============================
-const loginSchema = z.object({
-  email: z.string().email('Please enter valid email'),
-  password: z.string(),
-});
+// // =============================== Login ===============================
+// const loginSchema = z.object({
+//   email: z.string().email('Please enter valid email'),
+//   password: z.string(),
+// });
 
-export async function login(prevState: any, formData: FormData) {
-  const supabase = createClient();
-  const validatedFields = loginSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  });
+// export async function login(prevState: any, formData: FormData) {
+//   const supabase = createClient();
+//   const validatedFields = loginSchema.safeParse({
+//     email: formData.get('email'),
+//     password: formData.get('password'),
+//   });
 
-  // Return early if the form data is invalid
-  if (!validatedFields.success) {
-    return {
-      type: 'error',
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to login.',
-    };
-  }
+//   // Return early if the form data is invalid
+//   if (!validatedFields.success) {
+//     return {
+//       type: 'error',
+//       errors: validatedFields.error.flatten().fieldErrors,
+//       message: 'Missing Fields. Failed to login.',
+//     };
+//   }
 
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-    });
-    if (error) {
-      console.log('Error', error.message);
-      return {
-        type: 'error',
-        message: `${error.message}`,
-      };
-    }
-    return {
-      data: data,
-      type: 'success',
-      message: 'Login successful.',
-    };
-  } catch (error: any) {
-    console.log('Error', error.message);
-    return {
-      type: 'error',
-      message: 'Database Error: Failed to login.',
-    };
-  }
-}
+//   try {
+//     const { data, error } = await supabase.auth.signInWithPassword({
+//       email: validatedFields.data.email,
+//       password: validatedFields.data.password,
+//     });
+//     if (error) {
+//       console.log('Error', error.message);
+//       return {
+//         type: 'error',
+//         message: `${error.message}`,
+//       };
+//     }
+//     return {
+//       data: data,
+//       type: 'success',
+//       message: 'Login successful.',
+//     };
+//   } catch (error: any) {
+//     console.log('Error', error.message);
+//     return {
+//       type: 'error',
+//       message: 'Database Error: Failed to login.',
+//     };
+//   }
+// }
 
-export async function signOut() {
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect('/login');
-}
+// export async function signOut() {
+//   const supabase = createClient();
+//   await supabase.auth.signOut();
+//   return redirect('/login');
+// }
 
-export async function githubLogin() {
-  const supabase = createClient();
+// export async function githubLogin() {
+//   const supabase = createClient();
 
-  let { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-  });
-  console.log('github', data);
-  if (error) {
-    console.log('Error', error.message);
-    return {
-      type: 'error',
-      message: `${error.message}`,
-    };
-  }
-  if (data.url) {
-    redirect(data.url);
-  }
-}
+//   let { data, error } = await supabase.auth.signInWithOAuth({
+//     provider: 'github',
+//   });
+//   console.log('github', data);
+//   if (error) {
+//     console.log('Error', error.message);
+//     return {
+//       type: 'error',
+//       message: `${error.message}`,
+//     };
+//   }
+//   if (data.url) {
+//     redirect(data.url);
+//   }
+// }
