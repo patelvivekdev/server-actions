@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Server Actions',
+  title: 'Server Actions by patelvivek.dev',
   description: 'Learn server actions with patelvivek.dev',
 };
 
