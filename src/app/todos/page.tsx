@@ -8,7 +8,7 @@ export default async function Todo() {
   if (!session?.user)
     return (
       <div className='flex h-screen w-4/5 mx-auto flex-col items-center gap-10 justify-center'>
-        <h1 className='text-3xl'>You need to login to perfom this action.</h1>
+        <h1 className='text-3xl'>You must login to perform this action.</h1>
         <SignIn />
       </div>
     );
