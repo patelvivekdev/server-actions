@@ -1,6 +1,6 @@
 'use server';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
-import supabase from '@/lib/supabase/private';
+import supabase, { nextAuthClient } from '@/lib/supabase/private';
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -297,3 +297,76 @@ export async function changeStatus(id: number, isCompleted: boolean) {
 //     redirect(data.url);
 //   }
 // }
+
+// =============================== Change Avatar ===============================
+export async function changeAvatar(email: string, prevState: any, formData: FormData) {
+  const avatar = formData.get('avatar') as File;
+
+  if (!avatar) {
+    return {
+      type: 'error',
+      message: 'Please select an avatar',
+    };
+  }
+
+  // Only images are allowed
+  if (!avatar.type.includes('image')) {
+    return {
+      type: 'error',
+      message: 'Only images are allowed',
+    };
+  }
+
+  // make sure file is less than 2MB
+  if (avatar.size > 2 * 1024 * 1024) {
+    return {
+      type: 'error',
+      message: 'File size must be less than 2MB',
+    };
+  }
+
+  try {
+    const { data, error } = await supabase.storage.from('profile').upload(`public/${email}/${avatar.name}`, avatar, {
+      upsert: true,
+    });
+    // data {
+    //   path: 'public/patelvk2000@gmail.com/avatar.png',
+    //   id: '3343e910-a65d-4091-80ed-c3a60f9d3369',
+    //   fullPath: 'profile/public/patelvk2000@gmail.com/avatar.png'
+    // }
+    if (error) {
+      console.log('Error', error.message);
+      return {
+        type: 'error',
+        message: `${error.message}`,
+      };
+    }
+    if (data.path) {
+      const { data: avatar } = supabase.storage.from('profile').getPublicUrl(data.path);
+
+      // change the url in User table in next-auth schema
+      const { error: userDataError } = await nextAuthClient.from('users').update({ image: avatar.publicUrl }).eq('email', email);
+
+      if (userDataError) {
+        console.log('Error', userDataError);
+        return {
+          type: 'error',
+          message: `${userDataError.message}`,
+        };
+      }
+
+      revalidatePath('/');
+      return {
+        type: 'success',
+        message: 'Avatar changed!',
+        resetKey: Date.now().toString(),
+      };
+    }
+  } catch (error: any) {
+    console.log('error', error);
+    return {
+      type: 'error',
+      message: 'Database Error: Failed to change avatar.',
+    };
+  }
+}

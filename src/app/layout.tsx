@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={`bg-zinc-500 ${inter.className}`}>
         <Navbar />
         {children}
-        <Toaster position='top-right' />
+        <Toaster position='bottom-left' />
       </body>
     </html>
   );

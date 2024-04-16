@@ -1,7 +1,7 @@
 import AddTodo from './AddForm';
 import TodoList from './TodoList';
 import { auth } from '@/app/auth';
-import { SignIn, SignOut } from '@/components/auth-components';
+import { SignIn } from '@/components/auth-components';
 
 export default async function Todo() {
   const session = await auth();

@@ -1,5 +1,6 @@
 import { auth } from '@/app/auth';
 import { SignIn, SignOut } from '@/components/auth-components';
+import ChangeAvatarForm from './ChangeAvatarForm';
 
 export default async function PrivatePage() {
   const session = await auth();
@@ -15,6 +16,8 @@ export default async function PrivatePage() {
     <div className='mt-20 flex flex-col h-screen justify-center items-center'>
       <p>Hello {session.user.email}</p>
       <SignOut className='' />
+
+      <ChangeAvatarForm user={session?.user} />
     </div>
   );
 }
