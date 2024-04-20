@@ -25,7 +25,7 @@ const initialState = {
   errors: null,
 };
 
-export default function EditTodo({ todo }: { todo: any }) {
+export default function EditForm({ todo }: { todo: any }) {
   const [open, setOpen] = useState(false);
   const id: number = todo?.id;
   const editTodoWithId = editTodo.bind(null, id);

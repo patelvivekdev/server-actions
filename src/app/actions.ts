@@ -356,6 +356,7 @@ export async function changeAvatar(email: string, prevState: any, formData: Form
       }
 
       revalidatePath('/');
+      revalidatePath('/profile');
       return {
         type: 'success',
         message: 'Avatar changed!',
