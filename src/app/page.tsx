@@ -2,8 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-import ServerAction from '@/../public/server-actions.png';
-
 export default function Home() {
   return (
     <main className='flex min-h-screen flex-col items-center justify-center gap-10 p-24'>
@@ -13,7 +11,7 @@ export default function Home() {
 
       <div className='flex flex-col text-center gap-5'>
         <Image
-          src={ServerAction}
+          src='/server-actions.png'
           width={300}
           height={300}
           quality={100}

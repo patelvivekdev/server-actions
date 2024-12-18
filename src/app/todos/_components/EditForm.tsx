@@ -1,9 +1,7 @@
 'use client';
-import { toast } from 'react-hot-toast';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { toast } from 'sonner';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 
-import { SubmitButton } from '@/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -18,18 +16,23 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-import { editTodo } from '@/app/actions';
+import { editTodo } from '@/actions/actions';
+import { Todo } from '@/db/schema';
 
 const initialState = {
+  type: '',
   message: '',
-  errors: null,
+  data: {
+    title: '',
+  },
+  errors: undefined,
 };
 
-export default function EditForm({ todo }: { todo: any }) {
+export default function EditForm({ todo, addOptimisticTodo }: { todo: Todo; addOptimisticTodo: (todo: Todo) => void }) {
   const [open, setOpen] = useState(false);
-  const id: number = todo?.id;
+  const id = todo.id;
   const editTodoWithId = editTodo.bind(null, id);
-  const [state, formAction] = useFormState<any>(editTodoWithId as any, initialState);
+  const [state, formAction, isPending] = useActionState(editTodoWithId, initialState);
 
   useEffect(() => {
     if (state.type === 'success') {
@@ -37,6 +40,20 @@ export default function EditForm({ todo }: { todo: any }) {
       toast.success(state.message);
     }
   }, [state]);
+
+  const handleAddTodo = async (formData: FormData) => {
+    const title = formData.get('title') as string;
+    const isCompleted = formData.get('isCompleted') === 'on';
+
+    startTransition(async () => {
+      formAction(formData);
+      addOptimisticTodo({
+        id: todo.id,
+        title: title,
+        isCompleted: isCompleted,
+      });
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -48,7 +65,7 @@ export default function EditForm({ todo }: { todo: any }) {
           <DialogTitle>Edit Todo</DialogTitle>
           <DialogDescription>Make changes to your todo here. Click save when you are done.</DialogDescription>
         </DialogHeader>
-        <form action={formAction} key={state?.resetKey}>
+        <form action={handleAddTodo} key={state?.resetKey}>
           <div className='grid gap-4 py-4'>
             {state?.type === 'error' && (
               <p className='text-lg mb-2 bg-green-951 text-red-600 border-2 border-gray-300 rounded-md p-2 my-4'>
@@ -70,7 +87,9 @@ export default function EditForm({ todo }: { todo: any }) {
             </div>
           </div>
           <DialogFooter>
-            <SubmitButton name='Save changes' variant='default' className='' />
+            <Button type='submit' disabled={isPending} variant='outline'>
+              {isPending ? 'Submitting...' : 'submit'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

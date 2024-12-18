@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Toaster } from 'react-hot-toast';
-import Navbar from '@/components/Navbar';
+import { Toaster } from 'sonner';
+import Navbar from '@/components/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={`bg-zinc-500 ${inter.className}`}>
         <Navbar />
         {children}
-        <Toaster position='bottom-left' />
+        <Toaster position='bottom-right' />
       </body>
     </html>
   );
