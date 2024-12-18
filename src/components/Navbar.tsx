@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { SignIn, SignOut } from './auth-components';
-import { auth } from '@/app/auth';
+import { GithubSignIn, SignOut } from './auth-components';
+import { auth } from '@/app/(auth)/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default async function Navbar() {
@@ -19,13 +19,10 @@ export default async function Navbar() {
               <Button size='sm'>Todos</Button>
             </Link>
             {!session?.user ? (
-              <SignIn size='sm' />
+              <GithubSignIn />
             ) : (
               <>
-                <Link href='/profile'>
-                  <Button size='sm'>Profile</Button>
-                </Link>
-                <SignOut size='sm' variant='destructive' />
+                <SignOut />
                 <Avatar className='w-10 h-10 rounded-full border border-red-500'>
                   {session.user.image && (
                     <AvatarImage

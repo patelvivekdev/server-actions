@@ -1,39 +1,64 @@
-'use client';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut } from '@/app/(auth)/auth';
 import { Button } from './ui/button';
-// import { signIn, signOut } from '@/app/auth';
+import { unstable_noStore } from 'next/cache';
+import { GitHub, Google } from './icon';
 
-export function SignIn({ provider, ...props }: { provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+export function GithubSignIn() {
   return (
-    // <form
-    //   action={async () => {
-    //     'use server';
-    //     await signIn(provider);
-    //   }}
-    // >
-    //   <Button {...props}>Sign In</Button>
-    // </form>
-    <Button {...props} onClick={() => signIn(provider)}>
-      Sign In
-    </Button>
+    <form
+      action={async () => {
+        'use server';
+        await signIn('github', {
+          redirectTo: '/',
+          redirect: true,
+          callbackUrl: '/',
+        });
+      }}
+    >
+      <Button className='w-full' variant='outline'>
+        <GitHub className='mr-2 h-4 w-4' />
+        GitHub
+      </Button>
+    </form>
   );
 }
 
-export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
+export function GoogleSignIn() {
   return (
-    // <form
-    //   action={async () => {
-    //     'use server';
-    //     await signOut();
-    //   }}
-    //   className='w-full'
-    // >
-    //   <Button variant='destructive' className='w-full' {...props}>
-    //     Sign Out
-    //   </Button>
-    // </form>
-    <Button variant='destructive' onClick={() => signOut()} className='w-full' {...props}>
-      Sign Out
-    </Button>
+    <form
+      action={async () => {
+        'use server';
+        await signIn('google', {
+          redirectTo: '/',
+          redirect: true,
+          callbackUrl: '/',
+        });
+      }}
+    >
+      <Button className='w-full' variant='outline'>
+        <Google className='mr-2 h-4 w-4' />
+        Google
+      </Button>
+    </form>
+  );
+}
+
+export function SignOut() {
+  unstable_noStore();
+  return (
+    <form
+      action={async () => {
+        'use server';
+        await signOut({
+          redirectTo: '/',
+          redirect: true,
+        });
+      }}
+      className='w-full'
+    >
+      <Button size='sm' variant='destructive'>
+        Logout
+      </Button>
+    </form>
   );
 }
